@@ -404,6 +404,20 @@ end turb_export;"""
         assert tower2.timoschenko_input.set.values == [1, 2]
         assert tower2.timoschenko_input__2.set.values == [3, 3]
 
+    def test_location(self):
+        htc = HTCFile(self.testfilepath + "test.htc")
+        assert htc.new_htc_structure.main_body__3.location() == 'test.htc/new_htc_structure/main_body__3'
+
+    def test__call__(self):
+        htc = HTCFile(self.testfilepath + "test.htc")
+        assert htc.new_htc_structure.main_body(name='shaft').name.values[0] == 'shaft'
+        assert htc.new_htc_structure.main_body.c2_def.sec(v0=3).values[0] == 3
+
+    def test_jinja_tags(self):
+        htc = HTCFile(self.testfilepath + "jinja.htc",
+                      jinja_tags={'wsp': 12, 'log': None, 'begin_step': 100})
+        print(htc)
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
