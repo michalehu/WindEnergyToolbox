@@ -159,39 +159,44 @@ class JinjaWriter(HAWC2InputWriter):
                 f.write(out)
 
 
-if __name__ == '__main__':
-    from wetb.hawc2.tests import test_files
+def main():
+    if __name__ == '__main__':
+        from wetb.hawc2.tests import test_files
 
-    # HAWC2InputWriter example
-    path = os.path.dirname(test_files.__file__) + '/simulation_setup/DTU10MWRef6.0/'
-    base_htc_file = path + 'htc/DTU_10MW_RWT.htc'
+        # HAWC2InputWriter example
+        path = os.path.dirname(test_files.__file__) + '/simulation_setup/DTU10MWRef6.0/'
+        base_htc_file = path + 'htc/DTU_10MW_RWT.htc'
 
-    class MyWriter(HAWC2InputWriter):
-        def set_time(self, htc, time, **_):
-            htc.set_time(self.time_start, self.time_start + time)
+        class MyWriter(HAWC2InputWriter):
+            def set_time(self, htc, time, **_):
+                htc.set_time(self.time_start, self.time_start + time)
 
-    myWriter = MyWriter(base_htc_file, time_start=100)
-    myWriter('tmp/t1.htc', Name="t1", time=600, **{"wind.wsp": 10})
+        myWriter = MyWriter(base_htc_file, time_start=100)
+        myWriter('tmp/t1.htc', Name="t1", time=600, **{"wind.wsp": 10})
 
-    # JinjaWriter example with constants, variables, and functionals
-    Constants = {
-        'time_stop': 100,
-    }
+        # JinjaWriter example with constants, variables, and functionals
+        Constants = {
+            'time_stop': 100,
+        }
 
-    Variables = {
-        'wsp': [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
-        'tint': [0.05, 0.10, 0.15],
+        Variables = {
+            'wsp': [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
+            'tint': [0.05, 0.10, 0.15],
 
-    }
+        }
 
-    Functionals = {
-        'Name': lambda x: 'dtu10mw_wsp' + str(x['wsp']) + '_ti' + str(x['tint']),
-    }
+        Functionals = {
+            'Name': lambda x: 'dtu10mw_wsp' + str(x['wsp']) + '_ti' + str(x['tint']),
+        }
 
-    htc_template_fn = os.path.dirname(test_files.__file__) + '/simulation_setup/DTU10MWRef6.0/htc/DTU_10MW_RWT.htc.j2'
-    writer = JinjaWriter(htc_template_fn)
-    writer.from_CVF(Constants, Variables, Functionals)
-    print(writer.contents)
+        htc_template_fn = os.path.dirname(test_files.__file__) + \
+            '/simulation_setup/DTU10MWRef6.0/htc/DTU_10MW_RWT.htc.j2'
+        writer = JinjaWriter(htc_template_fn)
+        writer.from_CVF(Constants, Variables, Functionals)
+        print(writer.contents)
 
-    # write all htc files to folder 'htc'
-    writer.write_all('htc')
+        # write all htc files to folder 'htc'
+        writer.write_all('htc')
+
+
+main()
