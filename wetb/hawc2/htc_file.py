@@ -286,7 +286,7 @@ class HTCFile(HTCContents, HTCDefaults, HTCExtensions):
     def input_files(self):
         self.contents  # load if not loaded
         if self.modelpath == "unknown":
-            files = [str(f).replace("\\", "/") for f in self.htc_inputfiles]
+            files = [str(f).replace("\\", "/") for f in [self.filename] + self.htc_inputfiles]
         else:
             files = [os.path.abspath(str(f)).replace("\\", "/") for f in [self.filename] + self.htc_inputfiles]
         if 'new_htc_structure' in self:
