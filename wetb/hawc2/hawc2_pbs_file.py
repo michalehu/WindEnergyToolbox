@@ -88,7 +88,7 @@ class HAWC2PBSFile(PBSFile):
         PBSFile.__init__(self, self.modelpath, self.jobname, self.commands, queue, walltime=walltime)
 
     def commands(self):
-        rel_exe_dir = relpath(self.exe_dir, self.modelpath)
+        rel_exe_dir = relpath(abspath(self.exe_dir), abspath(self.modelpath))
         copy_input_to_scratch, copy_input_to_exe_dir = self.copy_input()
         return template(copy_hawc2=self.copy_hawc2(),
                         exe_dir=cluster_path(self.exe_dir),
@@ -108,11 +108,11 @@ echo copy hawc2 to scratch
 #===============================================================================
 (flock -x 200
 mkdir -p "/scratch/$USER/$PBS_JOBID/hawc2/"
-unzip -u -o -q "[hawc2_path]/*.zip" -d "/scratch/$USER/$PBS_JOBID/hawc2/"
-find "[hawc2_path]/*" ! -name *.zip -exec cp -u -t "/scratch/$USER/$PBS_JOBID/hawc2/" {} +
+unzip -u -o -q "[hawc2_path]/"*.zip -d "/scratch/$USER/$PBS_JOBID/hawc2/"
+find "[hawc2_path]/"* ! -name *.zip -exec cp -u -t "/scratch/$USER/$PBS_JOBID/hawc2/" {} +
 ) 200>"/scratch/$USER/$PBS_JOBID/lock_file_hawc2"
 mkdir -p "/scratch/$USER/$PBS_JOBID/[modelname]/run_[jobname]/[rel_exe_dir]"
-cp "/scratch/$USER/$PBS_JOBID/hawc2/*" "/scratch/$USER/$PBS_JOBID/[modelname]/run_[jobname]/[rel_exe_dir]"''')
+cp "/scratch/$USER/$PBS_JOBID/hawc2/"* "/scratch/$USER/$PBS_JOBID/[modelname]/run_[jobname]/[rel_exe_dir]"''')
         if self.hawc2_path is None:
             return ""
         else:

@@ -93,7 +93,7 @@ class HTCFile(HTCContents, HTCDefaults, HTCExtensions):
         """
 
         if filename is not None:
-            filename = fixcase(filename)
+            filename = fixcase(abspath(filename))
             with self.open(str(filename)):
                 pass
 

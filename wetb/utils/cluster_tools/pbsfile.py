@@ -23,7 +23,7 @@ class Template():
 pbs_template = Template('''### Jobid
 #PBS -N [jobname]
 ### Standard Output
-#PBS -o "[stdout_filename]"
+#PBS -o [stdout_filename]
 [stderr]
 #PBS -W umask=0003
 ### Maximum wallclock time format HOURS:MINUTES:SECONDS
